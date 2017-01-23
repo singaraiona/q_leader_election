@@ -7,12 +7,15 @@
 
 pids=""
 export QINIT=$PWD/king.q
-export Q=q64
+export Q=${HOME}/q/m32/q
 
 trap ctrl_c INT
 
 function ctrl_c() {
-    killall -9 $Q >/dev/null 2>&1;
+    for p in $pids;
+    do
+        kill -9 $p
+    done
 }
 
 
