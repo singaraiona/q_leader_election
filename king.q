@@ -36,8 +36,10 @@ ask:{x(`req;y;seq;`clb)};
 chk:{ask[x;`$"ALIVE?"]};
 // ping
 ping:{ask[x;`PING]};
-// start pinging 
-.z.ts: {ping hs 0;};
+// start pinging
+{chk x; wc[]}'[hs];
+king:$[-7h=type king;1;hs 2];
+.z.ts: {ping king;};
 system "t ", string 4000*T;
 
 
