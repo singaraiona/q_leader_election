@@ -11,10 +11,10 @@ print string id;
 parents:$[-1<>id;id _ nodes;()];
 king:$[-1=id;1;`];
 hs:{neg hopen hsym x}'[parents];
-clb:{reply::x;print (string x),lap[]};
+clb:{reply::x;print (string x),(string y),lap[]};
 res:({$[-7h=type king;`IMTHEKING;`FINETHANKS]};{};{};{});
-req:{(neg .z.w)(y;(((`$"ALIVE?";`$"FINETHANKS";`$"IMTHEKING";`$"PING")!(res))x)[])};
-ask:{x(`req;`$"ALIVE?";`clb)};
+req:{(neg .z.w)(z;(((`$"ALIVE?";`$"FINETHANKS";`$"IMTHEKING";`$"PING")!(res))x)[];y)};
+ask:{x(`req;`$"ALIVE?";seq;`clb)};
 
 cx:{(reply<>`) or x<t+4};
 
