@@ -16,33 +16,37 @@ id:$[(count nodes)>n:1+nodes?addrp[];n;-1];
 print string id;
 // get all parents should be alive?
 parents:$[-1<>id;id _ nodes;()];
-// are we king?
-king:$[-1=id;1;`];
-// opened handles of async connections
-hs:{neg hopen hsym x}'[parents];
+// are we the king?
+king:$[-1=id;0;`];
+weking:{-7h=type king};
 // callback function: called from other side of connection via async request `req
-clb:{reply::x;print (string x)," seq:",(string y),lap[]};
+clb:{reply::x;print (string x)," seq:",(string y),z};
 // parse requested function from api
-res:({$[-7h=type king;`IMTHEKING;`FINETHANKS]};{};{};{`PONG});
+res:({$[weking[];`IMTHEKING;`FINETHANKS]};{};{};{`PONG});
 // async request
-req:{(neg .z.w)(z;(((`$"ALIVE?";`$"FINETHANKS";`$"IMTHEKING";`$"PING")!(res))x)[];y)};
+req:{(neg .z.w)(z;(((`$"ALIVE?";`$"FINETHANKS";`$"IMTHEKING";`$"PING")!(res))x)[];y;lap[])};
 // condition: received reply or timeout is reached
-cx:{(reply<>`)or("v"$.z.t<t+T*4)};
+cx:{(reply<>`)or("v"$.z.t)>t+T*4};
 // wait until condition cx reaches
-wc:{reply:`;t::"v"$.z.t;{cx[]}/[{x};t]};
+wc:{reply::`;t::"v"$.z.t;{cx[]}/[{x};t]};
 // api request
-ask:{x(`req;y;seq;`clb)};
+ask:{(neg hopen hsym x)(`req;y;seq;`clb)};
 // alive?
 chk:{ask[x;`$"ALIVE?"]};
 // ping
 ping:{ask[x;`PING]};
 // start pinging
-{chk x; wc[]}'[hs];
-king:$[-7h=type king;1;hs 2];
-.z.ts: {ping king;};
+{chk x; wc[]}'[parents];
+// set proper king handle
+king:$[weking[];0;last parents];
+// debug
+print "king: ",string king
+// monitor participants 
+hdl:{(`$"ALIVE?";`$"FINETHANKS";`$"IMTHEKING";`$"PING")!({};{};{};{})};
+tick:{if[not weking[];ping king];wc[];hdl reply;};
+// setup timer
+.z.ts: {tick[]};
 system "t ", string 4000*T;
-
-
 
 
 

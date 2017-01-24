@@ -7,7 +7,7 @@
 
 pids=""
 export QINIT=$PWD/king.q
-export Q=${HOME}/q/m32/q
+export Q=${HOME}/q/l64/q
 
 trap ctrl_c INT
 
